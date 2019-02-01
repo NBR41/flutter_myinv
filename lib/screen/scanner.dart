@@ -71,7 +71,10 @@ class ScannerPageState extends State<ScannerPage> {
         _barcodes = barcodes;
         Navigator.of(context).push(new MaterialPageRoute<void>(
           builder: (BuildContext context) {
-            return getScaffold(body: SearchingBook(srv: MockModeler()));
+            return getScaffold(
+                context: context,
+                scaffoldKey: GlobalKey<ScaffoldState>(),
+                body: SearchingBook(srv: MockModeler()));
           },
         ));
       }

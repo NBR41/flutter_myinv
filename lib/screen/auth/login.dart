@@ -1,10 +1,11 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import '../../service/auth.dart';
 import 'login_presenter.dart';
-import '../../model/token.dart';
 import 'auth_observable.dart';
+import '../utils.dart';
+import '../../model/token.dart';
+import '../../service/auth.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthStateProvider auth;
@@ -79,12 +80,12 @@ class LoginScreenState extends State<LoginScreen>
     var loginBtn = new RaisedButton(
       onPressed: _submit,
       child: new Text("LOGIN"),
-      color: Colors.primaries[0],
+      color: mainColor,
     );
     var loginForm = new Column(
       children: <Widget>[
         new Text(
-          "Login App",
+          "MyInventory",
           textScaleFactor: 2.0,
         ),
         new Form(
@@ -121,6 +122,7 @@ class LoginScreenState extends State<LoginScreen>
     return new Scaffold(
       appBar: null,
       key: scaffoldKey,
+      backgroundColor: mainColor,
       body: new Container(
         child: new Center(
           child: new ClipRect(

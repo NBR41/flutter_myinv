@@ -9,14 +9,22 @@ abstract class Authenticater {
 
 class ServiceFactory {
   final String domain;
+  AuthStateProvider authState;
+  Authenticater auth;
 
   ServiceFactory(String domain) : domain = domain;
 
   AuthStateProvider getAuthStateProvider() {
-    return AuthStateProvider(getAuthenticateService(), StorageHelper());
+    if (authState == null) {
+      authState = AuthStateProvider(getAuthenticateService(), StorageHelper());
+    }
+    return authState;
   }
 
   Authenticater getAuthenticateService() {
-    return Authenticate(domain);
+    if (auth == null) {
+      auth = Authenticate(domain);
+    }
+    return auth;
   }
 }

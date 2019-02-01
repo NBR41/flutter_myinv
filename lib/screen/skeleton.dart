@@ -13,6 +13,7 @@ class SkeletonPage extends StatefulWidget {
 }
 
 class _SkeletonPageState extends State<SkeletonPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   final _widgetOptions = [
     Text('Home'),
@@ -23,6 +24,8 @@ class _SkeletonPageState extends State<SkeletonPage> {
   @override
   Widget build(BuildContext context) {
     return getScaffold(
+      context: context,
+      scaffoldKey: _scaffoldKey,
       body: Center(child: _getBottomMenuScreen(_selectedIndex)),
       bottom: BottomNavigationBar(
         items: <BottomNavigationBarItem>[

@@ -5,8 +5,6 @@ import 'screen/auth/login.dart';
 import 'service/factory.dart';
 import 'screen/utils.dart';
 
-final servFactory = ServiceFactory('foo');
-
 final routes = {
   '/login': (BuildContext context) =>
       new LoginScreen(servFactory.getAuthStateProvider()),
