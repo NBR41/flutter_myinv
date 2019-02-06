@@ -1,6 +1,7 @@
 import 'series.dart';
+import '../screen/home/explore/filters/filters.dart';
 
-class Book {
+class Book implements DynamicFilter {
   final num id;
   final String isbn;
   final String name;
@@ -9,6 +10,12 @@ class Book {
   final Series series;
 
   Book(this.id, this.isbn, this.name, this.seriesID, [this.href, this.series]);
+
+  int getID() => id;
+
+  String getName() => name;
+  String getFullName() =>
+      (series != null) ? series.getName() + " - " + name : name;
 
   Book.fromJson(Map<String, dynamic> json)
       : id = json['book_id'],

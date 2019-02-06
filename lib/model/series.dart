@@ -1,6 +1,7 @@
 import 'category.dart';
+import '../screen/home/explore/filters/filters.dart';
 
-class Series {
+class Series implements DynamicFilter {
   final num id;
   final String name;
   final String href;
@@ -8,6 +9,11 @@ class Series {
   final Category category;
 
   Series(this.id, this.name, this.categoryID, [this.href, this.category]);
+
+  int getID() => id;
+
+  String getFullName() => name;
+  String getName() => name;
 
   Series.fromJson(Map<String, dynamic> json)
       : id = json['series_id'],

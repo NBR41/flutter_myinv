@@ -1,16 +1,23 @@
 import '../model/token.dart';
+import '../screen/home/explore/filters/filters.dart';
 import 'mock/mock.dart';
 import 'auth.dart';
 import 'storage.dart';
+import 'mock/models.dart';
 
 abstract class Authenticater {
   Future<AuthToken> login(String login, String password);
+}
+
+abstract class Modeler {
+  Future<List<DynamicFilter>> getList(List<ExploreFilter> filters);
 }
 
 class ServiceFactory {
   final String domain;
   AuthStateProvider authState;
   Authenticater auth;
+  Modeler modeler;
 
   ServiceFactory(String domain) : domain = domain;
 
@@ -26,5 +33,12 @@ class ServiceFactory {
       auth = Authenticate(domain);
     }
     return auth;
+  }
+
+  Modeler getModeler() {
+    if (modeler == null) {
+      modeler = MockModels();
+    }
+    return modeler;
   }
 }

@@ -1,7 +1,9 @@
+/*
 import 'package:flutter/material.dart';
 
+import 'home/explore/home.dart';
 import 'utils.dart';
-import 'scanner.dart';
+import 'home/scanner.dart';
 
 class SkeletonPage extends StatefulWidget {
   SkeletonPage({Key key, this.title}) : super(key: key);
@@ -54,6 +56,9 @@ class _SkeletonPageState extends State<SkeletonPage> {
 
   Widget _getBottomMenuScreen(int index) {
     switch (index) {
+      case 1:
+        return ExplorePage(modeler: servFactory.getModeler());
+        break;
       case 2:
         return ScannerPage();
         break;
@@ -63,3 +68,4 @@ class _SkeletonPageState extends State<SkeletonPage> {
     }
   }
 }
+*/
