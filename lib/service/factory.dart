@@ -3,6 +3,7 @@ import '../screen/home/explore/filters/filters.dart';
 import 'mock/mock.dart';
 import 'auth.dart';
 import 'storage.dart';
+import 'book.dart';
 import 'mock/models.dart';
 
 abstract class Authenticater {
@@ -18,6 +19,7 @@ class ServiceFactory {
   AuthStateProvider authState;
   Authenticater auth;
   Modeler modeler;
+  BookGetter bg;
 
   ServiceFactory(String domain) : domain = domain;
 
@@ -40,5 +42,12 @@ class ServiceFactory {
       modeler = MockModels();
     }
     return modeler;
+  }
+
+  BookGetter getBookGetter() {
+    if (bg == null) {
+      bg = BookGetter();
+    }
+    return bg;
   }
 }

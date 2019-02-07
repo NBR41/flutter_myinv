@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile_vision/flutter_mobile_vision.dart';
 
-import '../../service/mock/mock.dart';
-import '../../model/book.dart';
+import '../../service/book.dart';
+import '../../model/bookdetail.dart';
 import '../utils/warning.dart';
 import '../utils/loading.dart';
 import '../utils/scaffold.dart';
@@ -14,6 +14,10 @@ import '../utils.dart';
 /// Scanner Page
 ///
 class ScannerPage extends StatefulWidget {
+  final BookGetter bookgetter;
+
+  ScannerPage({Key key, @required this.bookgetter}) : super(key: key);
+
   @override
   ScannerPageState createState() => ScannerPageState();
 }
@@ -75,9 +79,11 @@ class ScannerPageState extends State<ScannerPage> {
         Navigator.of(context).push(new MaterialPageRoute<void>(
           builder: (BuildContext context) {
             return getScaffold(
-                context: context,
-                scaffoldKey: GlobalKey<ScaffoldState>(),
-                body: SearchingBook(srv: MockModeler()));
+              context: context,
+              scaffoldKey: GlobalKey<ScaffoldState>(),
+              body: SearchingBook(
+                  book: widget.bookgetter.getByISBN(barcodes[0].rawValue)),
+            );
           },
         ));
       }
@@ -86,21 +92,20 @@ class ScannerPageState extends State<ScannerPage> {
 }
 
 class SearchingBook extends StatelessWidget {
-  final MockModeler srv;
-  final String isbn;
+  final Future<BookDetail> book;
 
-  SearchingBook({Key key, this.srv, this.isbn}) : super(key: key);
+  SearchingBook({Key key, this.book}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: FutureBuilder<Book>(
-        future: srv.getBook("caca"),
+      child: FutureBuilder<BookDetail>(
+        future: book,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return Text(snapshot.data.name);
+            return Text(snapshot.data.getString());
           } else if (snapshot.hasError) {
-            return new WarningScreen(txt: snapshot.error);
+            return new WarningScreen(txt: snapshot.error.toString());
           }
           // By default, show a loading spinner
           return const LoadingScreen(txt: "Searching for your barcode");

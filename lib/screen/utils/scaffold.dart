@@ -55,10 +55,11 @@ Widget getScaffold({
                       backgroundImage:
                           NetworkImage(getUserIcon("bernard.fab@gmail.com")),
                     ),
-                    Text(_auth.token.user.nickname),
+                    Text(_auth.token.user.nickname,
+                        style: TextStyle(fontSize: 24)),
                   ],
                 ),
-                Text(_auth.token.user.email),
+                Text(_auth.token.user.email, style: TextStyle(fontSize: 16)),
               ],
             ),
           ),
@@ -67,7 +68,7 @@ Widget getScaffold({
               Icons.clear,
               color: myColorRed,
             ),
-            title: Text('Logout'),
+            title: Text('Logout', style: TextStyle(fontSize: 18)),
             onTap: () async {
               await _auth.logout();
               Navigator.pop(context);
