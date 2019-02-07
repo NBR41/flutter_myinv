@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../service/factory.dart';
+import '../../utils/warning.dart';
+import '../../utils/loading.dart';
 import '../../utils.dart';
-import '../tabs.dart';
 import 'filters/filters.dart' as fi;
+import 'home.dart';
 
 class FilterList extends StatefulWidget {
   final PageCreator createPage;
@@ -41,50 +43,46 @@ class _FilterListState extends State<FilterList> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: FutureBuilder<List<fi.DynamicFilter>>(
-        future: widget.currentFilters.last.list,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _getList(context, snapshot.data);
-          } else if (snapshot.hasError) {
-            return WarningScreen(txt: snapshot.error);
-          }
-          // By default, show a loading spinner
-          return const LoadingScreen(txt: "Loading List");
-        },
+    return WillPopScope(
+      child: Center(
+        child: FutureBuilder<List<fi.DynamicFilter>>(
+          future: widget.currentFilters.last.list,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _getList(context, snapshot.data);
+            } else if (snapshot.hasError) {
+              return WarningScreen(txt: snapshot.error);
+            }
+            // By default, show a loading spinner
+            return const LoadingScreen(txt: "Loading List");
+          },
+        ),
       ),
+      onWillPop: () {
+        widget.currentFilters.removeLast();
+        return new Future(() => true);
+      },
     );
   }
 
   Widget _getList(BuildContext context, List<fi.DynamicFilter> list) {
+    Widget wlist;
+    if (nextFilters.length == 0) {
+      wlist = _getListViewSimple(context, list);
+    } else {
+      wlist = _getListviewExpanded(context, list);
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _getListTitle(),
-        Expanded(
-          child: ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              itemCount: list.length,
-              itemBuilder: (context, i) {
-                return ExpansionTile(
-                    title: Text(
-                      list[i].getFullName(),
-                      style: BIGGERFONT,
-                    ),
-                    children: [
-                      Wrap(
-                        spacing: 5.0,
-                        runSpacing: 1.0,
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        children: _getExploreFilterList(context, list[i]),
-                      )
-                    ]);
-              }),
+        Divider(
+          height: 10,
         ),
+        Expanded(child: wlist),
       ],
     );
   }
@@ -98,15 +96,57 @@ class _FilterListState extends State<FilterList> {
         txt += (txt == '') ? cf.filter.getName() : ' > ' + cf.filter.getName();
       }
     });
-    return Wrap(
-        alignment: WrapAlignment.start,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          Text(
-            txt,
-            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-          )
-        ]);
+    return Container(
+        padding: EdgeInsets.all(8.0),
+        child: Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(
+                txt,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+              )
+            ]));
+  }
+
+  Widget _getListViewSimple(BuildContext context, List<fi.DynamicFilter> list) {
+    return ListView.separated(
+        padding: const EdgeInsets.all(10.0),
+        itemCount: list.length,
+        separatorBuilder: (context, i) => Divider(
+              height: 10,
+            ),
+        itemBuilder: (context, i) {
+          return ListTile(
+            title: Text(
+              list[i].getFullName(),
+              style: BIGGERFONT,
+            ),
+          );
+        });
+  }
+
+  Widget _getListviewExpanded(
+      BuildContext context, List<fi.DynamicFilter> list) {
+    return ListView.builder(
+        padding: const EdgeInsets.all(10.0),
+        itemCount: list.length,
+        itemBuilder: (context, i) {
+          return ExpansionTile(
+              title: Text(
+                list[i].getFullName(),
+                style: BIGGERFONT,
+              ),
+              children: [
+                Wrap(
+                  spacing: 5.0,
+                  runSpacing: 1.0,
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  children: _getExploreFilterList(context, list[i]),
+                )
+              ]);
+        });
   }
 
   List<Widget> _getExploreFilterList(
@@ -138,7 +178,10 @@ class _FilterListState extends State<FilterList> {
           ),
         );
       },
-      child: Chip(label: Text(ef.txt)),
+      child: Chip(
+        label: Text(ef.txt, style: TextStyle(color: Colors.white)),
+        backgroundColor: myColorGreen,
+      ),
     );
   }
 }

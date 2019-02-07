@@ -79,14 +79,15 @@ class LoginScreenState extends State<LoginScreen>
     _ctx = context;
     var loginBtn = new RaisedButton(
       onPressed: _submit,
-      child: new Text("LOGIN"),
-      color: mainColor,
+      child: new Text("LOGIN", style: TextStyle(color: Colors.white)),
+      color: myColorGreen,
     );
     var loginForm = new Column(
       children: <Widget>[
         new Text(
           "MyInventory",
           textScaleFactor: 2.0,
+          style: TextStyle(color: Colors.white),
         ),
         new Form(
           key: formKey,
@@ -101,14 +102,24 @@ class LoginScreenState extends State<LoginScreen>
                         ? "Username must have atleast 10 chars"
                         : null;
                   },
-                  decoration: new InputDecoration(labelText: "Username"),
+                  decoration: new InputDecoration(
+                      labelText: "Username",
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      )),
                 ),
               ),
               new Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: new TextFormField(
                   onSaved: (val) => _password = val,
-                  decoration: new InputDecoration(labelText: "Password"),
+                  decoration: new InputDecoration(
+                      labelText: "Password",
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      )),
                 ),
               ),
             ],
@@ -122,7 +133,7 @@ class LoginScreenState extends State<LoginScreen>
     return new Scaffold(
       appBar: null,
       key: scaffoldKey,
-      backgroundColor: mainColor,
+      backgroundColor: myColorBlue,
       body: new Container(
         child: new Center(
           child: new ClipRect(

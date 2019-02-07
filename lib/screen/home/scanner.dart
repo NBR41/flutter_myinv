@@ -5,6 +5,9 @@ import 'package:flutter_mobile_vision/flutter_mobile_vision.dart';
 
 import '../../service/mock/mock.dart';
 import '../../model/book.dart';
+import '../utils/warning.dart';
+import '../utils/loading.dart';
+import '../utils/scaffold.dart';
 import '../utils.dart';
 
 ///
@@ -30,7 +33,6 @@ class ScannerPageState extends State<ScannerPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("call to build");
     return this._getButton();
   }
 
@@ -38,7 +40,8 @@ class ScannerPageState extends State<ScannerPage> {
     return Center(
         child: new RaisedButton(
       onPressed: _scan,
-      child: new Text('SCAN!'),
+      child: new Text('SCAN!', style: MYSTYLEBIGBOLDWHITE),
+      color: myColorGreen,
     ));
   }
 

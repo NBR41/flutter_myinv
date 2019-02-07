@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../service/factory.dart';
-import '../tabs.dart';
+import '../../utils.dart';
 import 'filters/filters.dart';
+import 'home.dart';
 import 'list.dart';
 
 class FilterCard extends StatefulWidget {
@@ -41,11 +42,14 @@ class _FilterCardState extends State<FilterCard> {
       },
       child: Center(
         child: Card(
-          color: Colors.grey,
+          color: myColorGreen,
           elevation: 3.0,
           margin: const EdgeInsets.all(15.0),
           child: Center(
-            child: Text(widget.filter.txt),
+            child: Text(
+              widget.filter.txt,
+              style: MYSTYLEMEDIUMBOLDWHITE,
+            ),
             widthFactor: 3.0,
             heightFactor: 3.0,
           ),
