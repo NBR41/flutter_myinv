@@ -3,22 +3,30 @@ import 'package:flutter/material.dart';
 import 'screen/home/home.dart';
 import 'screen/home/scanner.dart';
 import 'screen/home/explore/home.dart';
+import 'screen/auth/create.dart';
 import 'screen/auth/login.dart';
+
 import 'service/factory.dart';
 import 'screen/utils.dart';
 
 //import 'package:flutter/rendering.dart';
 
-var scanner = ScannerPage(bookgetter: servFactory.getBookGetter());
+var scanner = ScannerPage(bookServ: servFactory.getBookService());
 
 final routes = {
   '/login': (BuildContext context) =>
+      new LoginScreen(servFactory.getAuthStateProvider()),
+  '/create': (BuildContext context) =>
+      new CreateScreen(servFactory.getUserService()),
+  '/validate': (BuildContext context) =>
+      new LoginScreen(servFactory.getAuthStateProvider()),
+  '/forgotten': (BuildContext context) =>
       new LoginScreen(servFactory.getAuthStateProvider()),
   '/home': (BuildContext context) => HomePage(
         selectedIndex: 0,
         scannerPage: scanner,
         explorePage: ExploreHomePage(
-          modeler: servFactory.getModeler(),
+          modelServ: servFactory.getModelService(),
           createPage: (Widget body) => HomePage(
                 selectedIndex: 1,
                 scannerPage: scanner,
@@ -39,7 +47,7 @@ class MyApp extends StatelessWidget {
   final ServiceFactory servFactory;
 
   MyApp({Key key, String domain})
-      : servFactory = ServiceFactory(domain),
+      : servFactory = ServiceFactory(domain: domain),
         super(key: key);
 
   @override

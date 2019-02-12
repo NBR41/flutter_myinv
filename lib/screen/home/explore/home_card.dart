@@ -7,13 +7,13 @@ import 'list.dart';
 
 class FilterCard extends StatefulWidget {
   final PageCreator createPage;
-  final Modeler modeler;
+  final ModelService modelServ;
   final ExploreFilter filter;
 
   FilterCard({
     Key key,
     @required this.createPage,
-    @required this.modeler,
+    @required this.modelServ,
     @required this.filter,
   }) : super(key: key);
 
@@ -27,13 +27,13 @@ class _FilterCardState extends State<FilterCard> {
     return GestureDetector(
       onTap: () {
         var cardfilters = [widget.filter];
-        cardfilters.last.list = widget.modeler.getList(cardfilters);
+        cardfilters.last.list = widget.modelServ.getList(cardfilters);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => widget.createPage(
                   FilterList(
                     createPage: widget.createPage,
-                    modeler: widget.modeler,
+                    modelServ: widget.modelServ,
                     currentFilters: cardfilters,
                   ),
                 ),

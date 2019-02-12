@@ -8,13 +8,13 @@ import 'home.dart';
 
 class FilterList extends StatefulWidget {
   final PageCreator createPage;
-  final Modeler modeler;
+  final ModelService modelServ;
   final List<fi.ExploreFilter> currentFilters;
 
   FilterList(
       {Key key,
       @required this.createPage,
-      @required this.modeler,
+      @required this.modelServ,
       @required this.currentFilters})
       : super(key: key);
 
@@ -165,13 +165,13 @@ class _FilterListState extends State<FilterList> {
         var newFilterList = widget.currentFilters;
         newFilterList.last.filter = f;
         newFilterList.add(ef);
-        newFilterList.last.list = widget.modeler.getList(newFilterList);
+        newFilterList.last.list = widget.modelServ.getList(newFilterList);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => widget.createPage(
                   FilterList(
                     createPage: widget.createPage,
-                    modeler: widget.modeler,
+                    modelServ: widget.modelServ,
                     currentFilters: newFilterList,
                   ),
                 ),

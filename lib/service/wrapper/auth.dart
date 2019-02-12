@@ -1,29 +1,30 @@
 import 'dart:async';
-
-import 'factory.dart';
-import 'storage.dart';
-import '../model/token.dart';
+import 'package:flutter/foundation.dart';
+import '../factory.dart';
+import '../storage.dart';
+import '../../model/token.dart';
 
 enum AuthState { LOGGED_IN, LOGGED_OUT }
 
 class AuthStateProvider {
-  final Authenticater authSrv;
-  final StorageHelper storage;
+  final AuthService authServ;
+  final StorageHelper storageHelper;
+
   AuthToken token;
 
-  AuthStateProvider(this.authSrv, this.storage);
+  AuthStateProvider({@required this.authServ, @required this.storageHelper});
 
   Future<bool> isLogged() async {
     if (token == null) {
-      token = await storage.get();
+      token = await storageHelper.get();
     }
-    token = await storage.get();
+    token = await storageHelper.get();
     return Future.value(token != null);
   }
 
   Future<void> logout() async {
     try {
-      await storage.delete();
+      await storageHelper.delete();
       token = null;
     } catch (e) {
       return Future.error(e.toString());
@@ -32,8 +33,8 @@ class AuthStateProvider {
 
   Future<AuthToken> login(String login, String password) async {
     try {
-      token = await authSrv.login(login, password);
-      await storage.save(token);
+      token = await authServ.login(login, password);
+      await storageHelper.save(token);
       return token;
     } catch (e) {
       return Future.error(e.toString());

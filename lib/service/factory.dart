@@ -1,53 +1,74 @@
+import 'package:flutter/foundation.dart';
 import '../model/token.dart';
+import '../model/bookdetail.dart';
 import '../screen/home/explore/filters/filters.dart';
-import 'mock/mock.dart';
-import 'auth.dart';
 import 'storage.dart';
-import 'book.dart';
-import 'mock/models.dart';
+import 'wrapper/auth.dart';
 
-abstract class Authenticater {
+import 'mock/auth.dart';
+import 'mock/book.dart';
+import 'mock/models.dart';
+import 'mock/user.dart';
+
+abstract class AuthService {
   Future<AuthToken> login(String login, String password);
 }
 
-abstract class Modeler {
+abstract class ModelService {
   Future<List<DynamicFilter>> getList(List<ExploreFilter> filters);
+}
+
+abstract class UserService {
+  Future<bool> create(String email, String nickname, String password);
+}
+
+abstract class BookService {
+  Future<BookDetail> getByISBN(String isbn);
 }
 
 class ServiceFactory {
   final String domain;
   AuthStateProvider authState;
-  Authenticater auth;
-  Modeler modeler;
-  BookGetter bg;
+  AuthService _authServ;
+  ModelService _modelServ;
+  BookService _bookServ;
+  UserService _userServ;
 
-  ServiceFactory(String domain) : domain = domain;
+  ServiceFactory({@required this.domain});
 
   AuthStateProvider getAuthStateProvider() {
     if (authState == null) {
-      authState = AuthStateProvider(getAuthenticateService(), StorageHelper());
+      authState = AuthStateProvider(
+          authServ: getAuthService(), storageHelper: StorageHelper());
     }
     return authState;
   }
 
-  Authenticater getAuthenticateService() {
-    if (auth == null) {
-      auth = Authenticate(domain);
+  AuthService getAuthService() {
+    if (_authServ == null) {
+      _authServ = MockAuth();
     }
-    return auth;
+    return _authServ;
   }
 
-  Modeler getModeler() {
-    if (modeler == null) {
-      modeler = MockModels();
+  ModelService getModelService() {
+    if (_modelServ == null) {
+      _modelServ = MockModels();
     }
-    return modeler;
+    return _modelServ;
   }
 
-  BookGetter getBookGetter() {
-    if (bg == null) {
-      bg = BookGetter();
+  BookService getBookService() {
+    if (_bookServ == null) {
+      _bookServ = MockBook();
     }
-    return bg;
+    return _bookServ;
+  }
+
+  UserService getUserService() {
+    if (_userServ == null) {
+      _userServ = MockUser();
+    }
+    return _userServ;
   }
 }

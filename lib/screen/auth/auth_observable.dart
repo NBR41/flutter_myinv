@@ -1,4 +1,4 @@
-import '../../service/auth.dart';
+import '../../service/wrapper/auth.dart';
 
 abstract class AuthObserver {
   void onAuthStateChanged(AuthState state);

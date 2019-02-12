@@ -7,9 +7,10 @@ typedef PageCreator = Widget Function(Widget body);
 
 class ExploreHomePage extends StatefulWidget {
   final PageCreator createPage;
-  final Modeler modeler;
+  final ModelService modelServ;
 
-  ExploreHomePage({Key key, @required this.createPage, @required this.modeler})
+  ExploreHomePage(
+      {Key key, @required this.createPage, @required this.modelServ})
       : super(key: key);
 
   @override
@@ -29,7 +30,7 @@ class _ExploreHomePageState extends State<ExploreHomePage> {
     fi.filterRoutes[0].forEach((id) {
       childs.add(FilterCard(
         createPage: widget.createPage,
-        modeler: widget.modeler,
+        modelServ: widget.modelServ,
         filter: fi.filters[id],
       ));
     });

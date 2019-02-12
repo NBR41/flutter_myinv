@@ -1,10 +1,11 @@
-import '../model/bookdetail.dart';
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import '../../model/bookdetail.dart';
+import '../factory.dart';
 
-class BookGetter {
+class MockBook implements BookService {
   //https://www.googleapis.com/books/v1/volumes?projection=full&q=isbn:9782331040139
   static const String baseURL =
       'https://www.googleapis.com/books/v1/volumes?projection=full&q=isbn:';
@@ -12,7 +13,7 @@ class BookGetter {
   Future<BookDetail> getByISBN(String isbn) async {
     //print(baseURL + '9782331040139');
     //isbn = '9782331040139';
-    isbn = '9782723428262';
+    //isbn = '9782723428262';
     final response = await http.get(baseURL + isbn);
 
     if (response.statusCode == 200) {

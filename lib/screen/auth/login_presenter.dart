@@ -1,5 +1,5 @@
 import '../../model/token.dart';
-import '../../service/auth.dart';
+import '../../service/wrapper/auth.dart';
 
 abstract class LoginScreenContract {
   void onLoginSuccess(AuthToken token);

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobile_vision/flutter_mobile_vision.dart';
 
-import '../../service/book.dart';
+import '../../service/factory.dart';
 import '../../model/bookdetail.dart';
 import '../utils/warning.dart';
 import '../utils/loading.dart';
@@ -14,9 +14,9 @@ import '../utils.dart';
 /// Scanner Page
 ///
 class ScannerPage extends StatefulWidget {
-  final BookGetter bookgetter;
+  final BookService bookServ;
 
-  ScannerPage({Key key, @required this.bookgetter}) : super(key: key);
+  ScannerPage({Key key, @required this.bookServ}) : super(key: key);
 
   @override
   ScannerPageState createState() => ScannerPageState();
@@ -82,7 +82,7 @@ class ScannerPageState extends State<ScannerPage> {
               context: context,
               scaffoldKey: GlobalKey<ScaffoldState>(),
               body: SearchingBook(
-                  book: widget.bookgetter.getByISBN(barcodes[0].rawValue)),
+                  book: widget.bookServ.getByISBN(barcodes[0].rawValue)),
             );
           },
         ));

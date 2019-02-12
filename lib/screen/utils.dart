@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../service/factory.dart';
 
-final servFactory = ServiceFactory('foo');
+final servFactory = ServiceFactory(domain: 'foo');
 
 const TITLE = 'MyInventory';
 

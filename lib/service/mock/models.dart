@@ -2,7 +2,7 @@ import '../../screen/home/explore/filters/filters.dart';
 import 'values.dart';
 import '../factory.dart';
 
-class MockModels implements Modeler {
+class MockModels implements ModelService {
   Future<List<DynamicFilter>> getList(List<ExploreFilter> filters) {
     Future<List<DynamicFilter>> val;
     switch (filters.last.id) {
@@ -37,8 +37,6 @@ class MockModels implements Modeler {
 
     return Future.delayed(Duration(seconds: 3), () {
       return val;
-
-      //return Future.error('Failed to load book');
     });
   }
 }
