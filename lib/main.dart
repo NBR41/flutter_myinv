@@ -4,6 +4,7 @@ import 'screen/home/home.dart';
 import 'screen/home/scanner.dart';
 import 'screen/home/explore/home.dart';
 import 'screen/auth/create.dart';
+import 'screen/auth/forgotten.dart';
 import 'screen/auth/login.dart';
 
 import 'service/factory.dart';
@@ -18,9 +19,9 @@ final routes = {
       new LoginScreen(servFactory.getAuthStateProvider()),
   '/create': (BuildContext context) =>
       new CreateScreen(servFactory.getUserService()),
-  '/validate': (BuildContext context) =>
-      new LoginScreen(servFactory.getAuthStateProvider()),
   '/forgotten': (BuildContext context) =>
+      new ForgottenScreen(servFactory.getUserService()),
+  '/validate': (BuildContext context) =>
       new LoginScreen(servFactory.getAuthStateProvider()),
   '/home': (BuildContext context) => HomePage(
         selectedIndex: 0,

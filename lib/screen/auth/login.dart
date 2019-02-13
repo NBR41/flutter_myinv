@@ -27,14 +27,14 @@ class LoginScreenState extends State<LoginScreen>
   AuthObservable authObservable;
   LoginScreenPresenter _presenter;
 
-  bool _isLoading = false;
-  String _username, _password;
-
   GlobalKey<FormState> _formKey;
   GlobalKey<ScaffoldState> _scaffoldKey;
   FocusNode _loginNode;
   FocusNode _passwordNode;
-  OutlineInputBorder _border;
+
+  String _username, _password;
+  bool _isLoading = false;
+  bool _autoValidate;
 
   LoginScreenState(AuthStateProvider auth) {
     _presenter = LoginScreenPresenter(this, auth);
@@ -49,9 +49,7 @@ class LoginScreenState extends State<LoginScreen>
     _scaffoldKey = new GlobalKey<ScaffoldState>();
     _loginNode = FocusNode();
     _passwordNode = FocusNode();
-    _border = OutlineInputBorder(
-      borderSide: BorderSide(color: myColorBlue),
-    );
+    _autoValidate = false;
   }
 
   @override
@@ -84,14 +82,23 @@ class LoginScreenState extends State<LoginScreen>
   void _submit() {
     final form = _formKey.currentState;
     if (form.validate()) {
-      setState(() => _isLoading = true);
+      setState(() {
+        _autoValidate = false;
+        _isLoading = true;
+      });
       form.save();
       _presenter.doLogin(_username, _password);
+    } else {
+      setState(() => _autoValidate = true);
     }
   }
 
   void goToCreate() {
     Navigator.of(_ctx).pushNamed("/create");
+  }
+
+  void goToForgotten() {
+    Navigator.of(_ctx).pushNamed("/forgotten");
   }
 
   void _showSnackBar(String text) {
@@ -105,11 +112,13 @@ class LoginScreenState extends State<LoginScreen>
     return getAuthScaffold(height: 410, scaffoldKey: _scaffoldKey, form: [
       new Form(
         key: _formKey,
+        autovalidate: _autoValidate,
         child: new Column(
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(top: 10, bottom: 10),
-              child: new TextFormField(
+              child: getTextFormField(
+                obscureText: false,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 focusNode: _loginNode,
@@ -118,66 +127,26 @@ class LoginScreenState extends State<LoginScreen>
                   FocusScope.of(context).requestFocus(_passwordNode);
                 },
                 onSaved: (val) => _username = val,
-                validator: (val) {
-                  return val.isEmpty ? "Login must be defined" : null;
-                },
-                style: TextStyle(
-                  color: myColorYellow,
-                  fontSize: 18.0,
-                ),
-                decoration: new InputDecoration(
-                  border: _border,
-                  enabledBorder: _border,
-                  errorBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: myColorOrange),
-                  ),
-                  errorStyle: TextStyle(
-                    color: myColorOrange,
-                    fontSize: 13.0,
-                  ),
-                  labelText: "Login",
-                  labelStyle: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20.0,
-                  ),
-                  hintText: "Your Email or nickname",
-                ),
+                validator: (val) =>
+                    val.isEmpty ? "Login must be defined" : null,
+                labelText: "Login",
+                hintText: "Your Email or Nickname",
               ),
             ),
-            new TextFormField(
-              onSaved: (val) => _password = val,
+            getTextFormField(
               obscureText: true,
-              enableInteractiveSelection: false,
+              keyboardType: TextInputType.text,
               textInputAction: TextInputAction.done,
               focusNode: _passwordNode,
               onFieldSubmitted: (term) {
                 _passwordNode.unfocus();
                 _submit();
               },
-              validator: (val) {
-                return val.isEmpty ? "Password must be defined" : null;
-              },
-              style: TextStyle(
-                color: myColorYellow,
-                fontSize: 18.0,
-              ),
-              decoration: new InputDecoration(
-                border: _border,
-                enabledBorder: _border,
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: myColorOrange),
-                ),
-                errorStyle: TextStyle(
-                  color: myColorOrange,
-                  fontSize: 13.0,
-                ),
-                labelText: "Password",
-                labelStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
-                hintText: "Password",
-              ),
+              onSaved: (val) => _password = val,
+              validator: (val) =>
+                  val.isEmpty ? "Password must be defined" : null,
+              labelText: "Password",
+              hintText: "Your Password",
             ),
           ],
         ),
@@ -186,7 +155,7 @@ class LoginScreenState extends State<LoginScreen>
         padding: EdgeInsets.only(top: 8.0, bottom: 16.0),
         alignment: Alignment.centerRight,
         child: GestureDetector(
-          onTap: _isLoading ? null : _submit,
+          onTap: _isLoading ? null : goToForgotten,
           child: Text("FORGOTTEN PASSWORD ?",
               style: TextStyle(
                   color: myColorBlue,

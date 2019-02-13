@@ -20,6 +20,7 @@ abstract class ModelService {
 
 abstract class UserService {
   Future<bool> create(String email, String nickname, String password);
+  Future<bool> requestResetPassword(String email);
 }
 
 abstract class BookService {

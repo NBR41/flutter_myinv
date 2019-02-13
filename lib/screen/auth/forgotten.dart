@@ -4,24 +4,22 @@ import '../../service/factory.dart';
 import '../utils.dart';
 import 'utils.dart';
 
-class CreateScreen extends StatefulWidget {
+class ForgottenScreen extends StatefulWidget {
   final UserService userServ;
 
-  CreateScreen(this.userServ);
+  ForgottenScreen(this.userServ);
 
   @override
-  _CreateScreenState createState() => _CreateScreenState();
+  _ForgottenScreenState createState() => _ForgottenScreenState();
 }
 
-class _CreateScreenState extends State<CreateScreen> {
+class _ForgottenScreenState extends State<ForgottenScreen> {
   GlobalKey<FormState> _formKey;
   GlobalKey<ScaffoldState> _scaffoldKey;
   FocusNode _emailNode;
-  FocusNode _nicknameNode;
-  FocusNode _passwordNode;
-  String _email, _nickname, _password;
-  bool _autoValidate;
+  String _email;
   bool _isLoading = false;
+  bool _autoValidate;
 
   @override
   void initState() {
@@ -29,16 +27,12 @@ class _CreateScreenState extends State<CreateScreen> {
     _formKey = new GlobalKey<FormState>();
     _scaffoldKey = new GlobalKey<ScaffoldState>();
     _emailNode = FocusNode();
-    _nicknameNode = FocusNode();
-    _passwordNode = FocusNode();
     _autoValidate = false;
   }
 
   @override
   void dispose() {
     _emailNode.dispose();
-    _nicknameNode.dispose();
-    _passwordNode.dispose();
     super.dispose();
   }
 
@@ -52,10 +46,10 @@ class _CreateScreenState extends State<CreateScreen> {
       });
       form.save();
       try {
-        await widget.userServ.create(_email, _nickname, _password);
+        await widget.userServ.requestResetPassword(_email);
         Navigator.of(context).pushReplacement(
             new MaterialPageRoute<void>(builder: (BuildContext context) {
-          return AccountCreatedScreen();
+          return ForgottenMailScreen();
         }));
       } catch (error) {
         _scaffoldKey.currentState
@@ -64,9 +58,7 @@ class _CreateScreenState extends State<CreateScreen> {
 
       setState(() => _isLoading = false);
     } else {
-      setState(() {
-        _autoValidate = true;
-      });
+      setState(() => _autoValidate = true);
     }
   }
 
@@ -79,8 +71,10 @@ class _CreateScreenState extends State<CreateScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: new Text("Back",
-              style: TextStyle(color: Colors.black, fontSize: 20.0)),
+          child: new Text(
+            "Back",
+            style: TextStyle(color: Colors.black, fontSize: 20.0),
+          ),
           color: Colors.grey,
         ),
       ),
@@ -90,8 +84,10 @@ class _CreateScreenState extends State<CreateScreen> {
           onPressed: () {
             _submit(context);
           },
-          child: new Text("SIGNUP",
-              style: TextStyle(color: Colors.white, fontSize: 20.0)),
+          child: new Text(
+            "RESET",
+            style: TextStyle(color: Colors.white, fontSize: 20.0),
+          ),
           color: myColorGreen,
         ),
       ),
@@ -111,52 +107,16 @@ class _CreateScreenState extends State<CreateScreen> {
                 child: getTextFormField(
                   obscureText: false,
                   keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   focusNode: _emailNode,
                   onFieldSubmitted: (term) {
                     _emailNode.unfocus();
-                    FocusScope.of(context).requestFocus(_nicknameNode);
+                    _submit(context);
                   },
                   onSaved: (val) => _email = val,
                   validator: validateEmail,
                   labelText: "Email",
                   hintText: "Your Email",
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: getTextFormField(
-                  obscureText: false,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  focusNode: _nicknameNode,
-                  onFieldSubmitted: (term) {
-                    _nicknameNode.unfocus();
-                    FocusScope.of(context).requestFocus(_passwordNode);
-                  },
-                  onSaved: (val) => _nickname = val,
-                  validator: (val) =>
-                      val.isEmpty ? "Nickname must be defined" : null,
-                  labelText: "Nickname",
-                  hintText: "Your Nickname",
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 10),
-                child: getTextFormField(
-                  obscureText: true,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  focusNode: _passwordNode,
-                  onFieldSubmitted: (term) {
-                    _passwordNode.unfocus();
-                    _submit(context);
-                  },
-                  onSaved: (val) => _password = val,
-                  validator: (val) =>
-                      val.isEmpty ? "Password must be defined" : null,
-                  labelText: "Password",
-                  hintText: "Your Password",
                 ),
               ),
             ],
@@ -175,7 +135,7 @@ class _CreateScreenState extends State<CreateScreen> {
   }
 }
 
-class AccountCreatedScreen extends StatelessWidget {
+class ForgottenMailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return getAuthScaffold(
       height: 400,
@@ -186,11 +146,11 @@ class AccountCreatedScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Icon(Icons.info_outline, size: 200, color: myColorGreen),
+              Icon(Icons.mail, size: 200, color: myColorGreen),
               Container(
                 margin: EdgeInsets.all(5.0),
                 child: Text(
-                  "Your account has been created.\nWe have sent you an email to activate your account.",
+                  "A mail to reset your password has been sent to your mailbox.\n",
                   style: MYSTYLEBIGBOLDWHITE,
                 ),
               ),
